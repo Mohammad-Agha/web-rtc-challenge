@@ -13,7 +13,6 @@ var peer = new Peer(undefined, {
 
 let myVideoStream;
 let currentUserId;
-let pendingMessages = 0;
 let peers = {};
 
 var getUserMedia =
