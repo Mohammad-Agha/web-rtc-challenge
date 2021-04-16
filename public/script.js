@@ -9,7 +9,6 @@ myVideo.muted = true;
 var peer = new Peer(undefined, {
   path: "/peerjs",
   host: "/",
-  // port: process.env.PORT || 3000,
 });
 
 let myVideoStream;
@@ -44,26 +43,6 @@ navigator.mediaDevices
     socket.on("user-disconnected", (userId) => {
       if (peers[userId]) peers[userId].close();
     });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.which === 13 && chatInputBox.value != "") {
-        socket.emit("message", {
-          msg: chatInputBox.value,
-          user: currentUserId,
-        });
-        chatInputBox.value = "";
-      }
-    });
-
-    document.getElementById("sendMsg").addEventListener("click", (e) => {
-      if (chatInputBox.value != "") {
-        socket.emit("message", {
-          msg: chatInputBox.value,
-          user: currentUserId,
-        });
-        chatInputBox.value = "";
-      }
-    });
   });
 
 peer.on("call", function (call) {
@@ -76,7 +55,9 @@ peer.on("call", function (call) {
         addVideoStream(video, remoteStream);
       });
     },
-    function (err) {}
+    function (err) {
+      console.log(err.message);
+    }
   );
 });
 
@@ -119,5 +100,17 @@ const addVideoStream = (videoEl, stream, uId = "") => {
       document.getElementsByTagName("video")[index].style.width =
         100 / totalUsers + "%";
     }
+  }
+};
+
+let recording = false;
+const record = () => {
+  const elem = document.getElementById("record");
+  if (!recording) {
+    elem.innerText = "Stop recording";
+    recording = true;
+  } else {
+    elem.innerText = "Start recording";
+    recording = false;
   }
 };
